@@ -425,3 +425,13 @@
 00:18:43.022742 version@stat F·[2 5] S·14MiB[5MiB 8MiB] Sc·[0.50 0.09]
 00:18:43.076105 db@janitor F·9 G·0
 00:18:43.076211 db@open done T·286.390576ms
+=============== Mar 22, 2022 (CET) ===============
+01:26:08.185126 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+01:26:08.192952 version@stat F·[2 5] S·14MiB[5MiB 8MiB] Sc·[0.50 0.09]
+01:26:08.193043 db@open opening
+01:26:08.193383 journal@recovery F·1
+01:26:08.200073 journal@recovery recovering @106
+01:26:08.210525 memdb@flush created L0@108 N·2 S·304B "Las..ock,v433757":"unc..own,v433758"
+01:26:08.216208 version@stat F·[3 5] S·14MiB[5MiB 8MiB] Sc·[0.75 0.09]
+01:26:08.249776 db@janitor F·10 G·0
+01:26:08.249850 db@open done T·56.770578ms

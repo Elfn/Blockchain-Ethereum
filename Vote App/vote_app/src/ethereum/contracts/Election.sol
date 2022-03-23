@@ -67,6 +67,7 @@ contract Election{
     addCandidate("D");
     addCandidate("E");
     addCandidate("F");
+   // candidates[0].voteCount=1;
 
   }
 
@@ -159,7 +160,7 @@ contract Election{
   // }
 
   //Give winner name
-  function winner() public  restricted view returns (Candidate winner)
+  function winner() public view returns (Candidate winner)
   {
 
     // //Check if today date is equal to the deadline date
