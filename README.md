@@ -137,7 +137,10 @@ https://geth.ethereum.org/docs/interface/javascript-console
 > Personal.newAccount()  
 (add password)
 >
-##  start mining
+##  Start mining
+> miner.stop()
+>
+##  Stop mining
 > miner.start(1)
 >
 ##  ADD Ethers to an account
