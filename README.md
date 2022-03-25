@@ -138,10 +138,10 @@ https://geth.ethereum.org/docs/interface/javascript-console
 (add password)
 >
 ##  Start mining
-> miner.stop()
+> miner.start(1)
 >
 ##  Stop mining
-> miner.start(1)
+> miner.stop()
 >
 ##  ADD Ethers to an account
 > miner.setEtherbase(eth.accounts[0])  
