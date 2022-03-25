@@ -137,7 +137,7 @@ https://geth.ethereum.org/docs/interface/javascript-console
 > Personal.newAccount()  
 (add password)
 >
-##  Start mining
+##  Start mining with one thread
 > miner.start(1)
 >
 ##  Stop mining
