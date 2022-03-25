@@ -133,13 +133,24 @@ https://geth.ethereum.org/docs/interface/javascript-console
 
 ## Key commands from the javascript console
 > Personal.newAccount()  
-(add password)   
-> miner.start(1) - start mining  
+(add password)
+>
+##  start mining
+> miner.start(1)
+>
+##  ADD Ethers to an account
 > miner.setEtherbase(eth.accounts[0])  
+>
 > miner.getHashrate()
-> eth.blockNumber - current block height  
-> eth.getBlock(number).miner - miner of block at that number  
-> eth.getBalance(account address) - current balance of that account 
+>
+##  - current block height
+> eth.blockNumber 
+>
+##- miner of block at that number
+> eth.getBlock(number).miner  
+> 
+## - current balance of that account
+> eth.getBalance(account address)
 >
 ##- Unlock account
 > 
@@ -148,7 +159,8 @@ https://geth.ethereum.org/docs/interface/javascript-console
 > personal.unlockAccount(personal.listAccounts[2],"", 15000)  
 > personal.unlockAccount(personal.listAccounts[3],"", 15000)  
 > personal.unlockAccount(personal.listAccounts[4],"", 15000)  
-> 
+>
+##- Get an account from local ethereum network
 > eth.getBalance(personal.listAccounts[0])
 
 ## Start Front end server

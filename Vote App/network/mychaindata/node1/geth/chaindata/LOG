@@ -435,3 +435,33 @@
 01:26:08.216208 version@stat F·[3 5] S·14MiB[5MiB 8MiB] Sc·[0.75 0.09]
 01:26:08.249776 db@janitor F·10 G·0
 01:26:08.249850 db@open done T·56.770578ms
+=============== Mar 25, 2022 (CET) ===============
+20:29:35.880544 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+20:29:35.885061 version@stat F·[3 5] S·14MiB[5MiB 8MiB] Sc·[0.75 0.09]
+20:29:35.885158 db@open opening
+20:29:35.885512 journal@recovery F·1
+20:29:35.890352 journal@recovery recovering @109
+20:29:36.166933 memdb@flush created L0@111 N·98939 S·4MiB "H\x00\n..\xc8\xd9\xdc,v447150":"unc..own,v433760"
+20:29:36.175675 version@stat F·[4 5] S·19MiB[10MiB 8MiB] Sc·[1.00 0.09]
+20:29:36.235913 db@janitor F·11 G·0
+20:29:36.235991 db@open done T·350.787579ms
+20:29:36.237263 table@compaction L0·4 -> L1·5 S·19MiB Q·532699
+20:29:36.390137 table@build created L1@114 N·54605 S·2MiB "\x00B\xe8..\xcc\x15\xad,v254708":"H\xf5d..\x038\x88,v520041"
+20:29:36.580826 table@build created L1@115 N·46276 S·2MiB "H\xf5e..Ʉ\xc2,v297790":"b\x00\x00..Y\xf6\xca,v134888"
+20:29:36.675060 table@build created L1@116 N·21328 S·2MiB "b\x00\x00..\x05\x1e{,v134897":"h\x00\x00..(\x0fJ,v277238"
+20:29:36.763092 table@build created L1@117 N·20496 S·2MiB "h\x00\x00..\x0fJt,v277235":"h\x00\x00..\x82\x19\xf5,v293792"
+20:29:36.848424 table@build created L1@118 N·21167 S·2MiB "h\x00\x00..\x19\xf5t,v293789":"h\x00\x00..L\xa30,v482274"
+20:29:36.954012 table@build created L1@119 N·22681 S·2MiB "h\x00\x00..\xa30t,v482271":"h\x00\x00..s\xe0\x10,v83442"
+20:29:37.058522 table@build created L1@120 N·28032 S·2MiB "h\x00\x00..\xe0\x10t,v83439":"h\x00\x00..ĕc,v343728"
+20:29:37.122801 table@build created L1@121 N·48628 S·2MiB "h\x00\x00..\x95ct,v343726":"r\x00\x00..\x83\xfc|,v126360"
+20:29:37.137132 table@build created L1@122 N·5167 S·228KiB "r\x00\x00..\xb5\xde\x0e,v126369":"\xffR\x84..\xb1\x1ap,v48427"
+20:29:37.137287 version@stat F·[0 9] S·16MiB[0B 16MiB] Sc·[0.00 0.17]
+20:29:37.142266 table@compaction committed F~ S-2MiB Ke·0 D·115458 T·904.76181ms
+20:29:37.147289 table@remove removed @108
+20:29:37.147999 table@remove removed @105
+20:29:37.148544 table@remove removed @102
+20:29:37.148895 table@remove removed @97
+20:29:37.149203 table@remove removed @98
+20:29:37.149583 table@remove removed @99
+20:29:37.149909 table@remove removed @100
+20:29:37.150049 table@remove removed @101
