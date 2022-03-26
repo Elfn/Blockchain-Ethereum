@@ -3,7 +3,8 @@ import Election from '../../ethereum/election'
 import web3 from '../../ethereum/web3';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import {Badge, Button, Card, CardGroup, Col, Container, Form, Modal, Row, Stack} from "react-bootstrap";
+import {Alert, Badge, Button, Card, CardGroup, Col, Container, Form, Modal, Row, Spinner, Stack} from "react-bootstrap";
+import {BrowserRouter as Router, Routes, Route, BrowserRouter} from 'react-router-dom';
 
 class Responsable extends Component {
 
@@ -14,6 +15,7 @@ class Responsable extends Component {
     this.onSelectDate = this.onSelectDate.bind(this);
     this.onAddCandidate = this.onAddCandidate.bind(this);
     this.onShowListModal = this.onShowListModal.bind(this);
+    console.log('OOOOOOOOOOOOOOO');
 
 
     this.state = {
@@ -30,6 +32,10 @@ class Responsable extends Component {
       showAddModal: false,
       showListModal: false,
       showDatePickerModal: false,
+      loading: false,
+      isAdded: false,
+      errorMessage: '',
+      winnerName: ''
     };
 
     const election = Election;
@@ -128,7 +134,7 @@ class Responsable extends Component {
       return <Card key={index} style={{ width: '40px'}}>
           <Card.Img variant="top" src={imgUrl} />
           <Card.Body className="text-center">
-            <Card.Title>{item.name}</Card.Title>
+            <Card.Title>{web3.utils.hexToUtf8(item.name)}</Card.Title>
             <h5><Badge bg="warning">{item.voteCount}</Badge></h5>
           </Card.Body>
         </Card>
@@ -137,6 +143,7 @@ class Responsable extends Component {
 
    onSelectDate(e) {
      let endDate = new Date(e.target.value).toLocaleDateString("fr-FR");
+     const election = Election;
      this.setState({value: e.target.value});
      localStorage.setItem('value',e.target.value);
      this.setState({endDate: endDate});
@@ -148,6 +155,13 @@ class Responsable extends Component {
      localStorage.setItem('isEnd', isEndOfElection);
      console.log('IN RESPONSIBLE ',isEndOfElection);
      this.props.onGetElectionStatus(isEndOfElection);
+     if(localStorage.getItem('isEnd') == 'true'){
+       election.methods.winner().call().then((name) => {
+            this.setState({winnerName: name})
+            localStorage.setItem('winner',name);
+         console.log(name);
+       });
+     }
   }
 
   onCheckDate(){
@@ -156,37 +170,55 @@ class Responsable extends Component {
     const todayDate = new Date().toLocaleDateString("fr-FR");
     if(todayDate === endDate){
       this.props.onGetElectionStatus(true);
+      this.setState({isEnd: true});
+      localStorage.setItem('isEnd', true)
     }else{
-      this.props.onGetElectionStatus(true);
+      this.props.onGetElectionStatus(false);
+      this.setState({isEnd: false});
+      localStorage.setItem('isEnd', false);
     }
   }
 
-   onAddCandidate = async (event) => {
+    onAddCandidate = async (event) => {
     //Prevent the "Submit" function to be executed unintentionally
     event.preventDefault();
-    //this.setState({loading: true, errorMessage: ''});
-    const election = Election;
-    console.log(event);
-    // try {
-    //   await election.methods.addCandidate(web3.utils.fromAscii(event.target.value)).send({
-    //     from: this.state.accounts[0]
-    //   });
-    //
-    //   console.log('OK',event.target.value);
-    //
-    // }catch (err) {
-    //   this.setState({errorMessage: err.message});
-    // }
+      if(this.state.candidateName == ''){
+        this.setState({errorMessage: 'Saisissez une valeur'});
+        this.setState({loading: false});
+        return;
+      }
+      this.setState({loading: true, errorMessage: ''});
+      const election = Election;
+      console.log(this.state.candidateName);
 
-    // this.setState({loading: false});
-    // this.setState({isAdded: true});
+    try {
+
+        await election.methods.addCandidate(web3.utils.fromAscii(this.state.candidateName)).send({
+          from: this.state.accounts[0]
+        });
+
+      console.log('OK',event.target.value);
+      this.setState({isAdded: true});
+      window.location.reload('/responsable');
+
+    }catch (err) {
+      this.setState({errorMessage: err.message});
+    }
+
+    this.setState({loading: false});
      this.setState({candidateName: ''});
+
+
   }
+
+
 
    handleClose = () => {
     this.setState({showAddModal: false});
     this.setState({showListModal: false});
     this.setState({showDatePickerModal: false});
+    this.setState({isAdded: false});
+
   };
 
   render() {
@@ -202,6 +234,12 @@ class Responsable extends Component {
             <Stack direction="horizontal" gap={3}>
               <h5><Badge bg="warning">Responsable</Badge></h5>
               <h5><Badge className="text-black" style={{fontWeight: '12px'}} bg="light"><b>{this.state.accounts[0]}</b></Badge></h5>
+              {(localStorage.getItem('isEnd') == 'true') && <Button variant="primary" style={{fontWeight: '12px'}}>
+                <Stack direction="horizontal" gap={3}>
+                  <div>Vainqueur</div>
+                  <div><Badge bg="secondary">{localStorage.getItem('winner')}</Badge></div>
+                </Stack>
+              </Button>}
             </Stack>
           </Col>
           <Col />
@@ -265,7 +303,31 @@ class Responsable extends Component {
               Ajout de candidat
             </Modal.Title>
           </Modal.Header>
-          <Modal.Body>...</Modal.Body>
+          <Modal.Body>
+            {/*FORMULAIRE D'AJOUT*/}
+            <Form className="text-center">
+              {(this.state.isAdded == true) && <Alert variant="success"><Alert.Heading>Candidate ajouté</Alert.Heading></Alert>}
+              {(this.state.errorMessage) && <Alert variant="danger"><Alert.Heading>{this.state.errorMessage}</Alert.Heading></Alert>}
+              <Form.Group className="mb-3" controlId="formBasicName">
+                {/*<Form.Label>Email address</Form.Label>*/}
+                <Form.Control value={this.state.candidateName} onChange={event => this.setState({ candidateName: event.target.value })} className="text-center" type="text" placeholder="Entrez le nom du candidat" />
+              </Form.Group>
+              <Button
+                disabled={this.state.loading == true}
+                onClick={this.onAddCandidate}
+                variant="primary"
+                type="submit">
+                {(this.state.loading == true) && <Spinner
+                  as="span"
+                  animation="grow"
+                  size="sm"
+                  role="status"
+                  aria-hidden="true"
+                />}
+                Ajouter
+              </Button>
+            </Form>
+          </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={this.handleClose}>
               Fermer

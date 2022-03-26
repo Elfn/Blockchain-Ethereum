@@ -3,6 +3,8 @@ import Election from '../../ethereum/election'
 import web3 from '../../ethereum/web3';
 import {useState, useEffect} from "react";
 import {useParams} from 'react-router-dom';
+import {Alert, Badge, Button, Card, CardGroup, Col, Container, Form, Modal, Row, Spinner, Stack} from "react-bootstrap";
+
 
 
 const Electeurs = (props) => {
@@ -109,45 +111,9 @@ const Electeurs = (props) => {
 
 
     return (
-      <div>
-        <div className="container">
-          <div className="row mt-5">
-            <div className="col float-start">
-              <h3>Espace électeurs</h3>
-            </div>
-            <div className="col">
+      <Container>
 
-            </div>
-          </div>
-          {isEnded == 'true' && <div className="row text-center"> <div className="col"></div><div className="alert alert-warning border-warning border-5 col" role="alert">Session électorale terminée vous ne pouvez pas voter</div><div className="col"></div></div>}
-          {isEnded == 'false' && <div className="row text-center"> <div className="col"></div><div className="alert alert-info border-info border-5 col" role="alert">Sélectionnez une adresse ensuite votez ou déléguez votre vote</div><div className="col"></div></div>}
-          <div className="row mt-3">
-            <div className="col float-start">
-              <select  disabled={isEnded == 'true'} style={{width: '60%',marginLeft: 12}} className="form-select form-select-md mb-1" aria-label=".form-select-lg example" onChange={onSelection.bind(this)} >
-                <option defaultValue>Selectionnez une adresse de vote</option>
-                {renderVoters().map((item) => {
-                  // console.log(item);
-                 return <option key={item} value={item} >{item}</option>;
-                })}
-              </select>
-            </div>
-            <div className="col">
-            </div>
-          </div>
-          <div className="row mt-5">
-            <div className="col">
-              <div className="d-flex flex-row bd-highlight mb-2">
-                {value && <div className="p-2 bd-highlight"><h5 className="float-start"><span className="badge badge bg-success">Électeur</span></h5></div>}
-                <div className="p-2 bd-highlight"><h5 className="float-start"><span className="badge badge bg-light text-dark">{value}</span></h5></div>
-                <div className="p-2 bd-highlight"></div>
-              </div>
-            </div>
-          </div>
-          <div className="row">
-            {renderCandidates()}
-          </div>
-        </div>
-      </div>
+      </Container>
     );
 
 }

@@ -61,12 +61,12 @@ contract Election{
   constructor() public {
     electionManager = msg.sender;
 
-    addCandidate("A");
-    addCandidate("B");
-    addCandidate("C");
-    addCandidate("D");
-    addCandidate("E");
-    addCandidate("F");
+//    addCandidate("A");
+//    addCandidate("B");
+//    addCandidate("C");
+//    addCandidate("D");
+//    addCandidate("E");
+//    addCandidate("F");
     // candidates[0].voteCount=1;
 
   }
@@ -75,7 +75,7 @@ contract Election{
     candidateCount++;
     imageId++;
     //candidates[candidateCount] = Candidate(candidateCount, _name, 0);
-    candidates.push(Candidate( candidateCount, _name, url,0));
+    candidates.push(Candidate( candidateCount, string(_name), url,0));
   }
 
   //Election manager has to grant vote's right to voter before he can vote
