@@ -148,6 +148,7 @@ contract Election{
       // add to her weight.
       delegate_.weight += sender.weight;
       candidates[_candidateId-1].voteCount += 1;
+      delegate_.voted = true;
 
     }
   }

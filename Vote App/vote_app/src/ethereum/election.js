@@ -11,7 +11,7 @@ import election from '../ethereum/util/build/Election.json';
 
 //const accounts = web3.eth.getAccounts();
 
-var myContract = new web3.eth.Contract(JSON.parse(election.interface), '0x02B9Da7EC2C597EDC906eb64b53A72cbBc6d22c7');
+var myContract = new web3.eth.Contract(JSON.parse(election.interface), '0xDADb4b0673183d270b0C7DA8Ab3F3063B1496aD5');
 
 export default myContract;
 

@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import {Alert, Badge, Button, Card, CardGroup, Col, Container, Form, Modal, Row, Spinner, Stack} from "react-bootstrap";
 import {BrowserRouter as Router, Routes, Route, BrowserRouter} from 'react-router-dom';
-import {useState, useEffect} from "react";
+import {useState, useEffect, useReducer} from "react";
 
 function Responsable(props) {
 
@@ -27,6 +27,10 @@ function Responsable(props) {
   const [errorMessage, setErrorMessage] = useState('');
   const [winnerName, setWinnerName] = useState('');
 
+  //userReducer to immediatly refresh component after an update's value
+  const [reducerValue, forceUpdate] = useReducer(x => x + 1, 0);
+
+
   useEffect(() => {
 
     web3.eth.getAccounts().then(res => {
@@ -38,7 +42,10 @@ function Responsable(props) {
     election.methods.candidateCount().call().then(count => setCandidateCount(count));
     //onCheckDate();
 
-  }, []);
+//We have to put "reducerValue" in dependencies
+// array of useEffect to enable refresh when there
+// is a change of value(More than one time)
+  }, [reducerValue]);
 
 
 
@@ -164,6 +171,7 @@ function Responsable(props) {
         return;
       }
       setLoading(true);
+      setIsAdded(false);
       setErrorMessage('');
       console.log(candidateName);
 
@@ -175,7 +183,8 @@ function Responsable(props) {
 
       console.log('OK',event.target.value);
       setIsAdded(true);
-      window.location.reload('/responsable');
+     // window.location.reload('/responsable');
+      forceUpdate();
 
     }catch (err) {
       setErrorMessage(err.message);
@@ -285,7 +294,7 @@ function Responsable(props) {
               {(errorMessage) && <Alert variant="danger"><Alert.Heading>{errorMessage}</Alert.Heading></Alert>}
               <Form.Group className="mb-3" controlId="formBasicName">
                 {/*<Form.Label>Email address</Form.Label>*/}
-                <Form.Control value={candidateName} onChange={event => setCandidateName(event.target.value)} className="text-center" type="text" placeholder="Entrez le nom du candidat" />
+                <Form.Control disabled={loading == true} value={candidateName} onChange={event => setCandidateName(event.target.value)} className="text-center" type="text" placeholder="Entrez le nom du candidat" />
               </Form.Group>
               <Button
                 disabled={loading == true}
