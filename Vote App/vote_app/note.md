@@ -135,11 +135,20 @@ https://geth.ethereum.org/docs/interface/javascript-console
 > Personal.newAccount()  
 (add password)
 >
-##  start mining
+##  Start mining
 > miner.start(1)
 >
+> ##  Stop mining
+> miner.stop()
+> 
 ##  ADD Ethers to an account
 > miner.setEtherbase(eth.accounts[0])  
+> miner.setEtherbase(eth.accounts[1])  
+> miner.setEtherbase(eth.accounts[2])  
+> miner.setEtherbase(eth.accounts[3])  
+> miner.setEtherbase(eth.accounts[4])  
+> miner.setEtherbase(eth.accounts[5])  
+> miner.setEtherbase(eth.accounts[6])  
 >
 > miner.getHashrate()
 >
@@ -159,6 +168,8 @@ https://geth.ethereum.org/docs/interface/javascript-console
 > personal.unlockAccount(personal.listAccounts[2],"", 15000)  
 > personal.unlockAccount(personal.listAccounts[3],"", 15000)  
 > personal.unlockAccount(personal.listAccounts[4],"", 15000)  
+> personal.unlockAccount(personal.listAccounts[5],"", 15000)  
+> personal.unlockAccount(personal.listAccounts[6],"", 15000)  
 >
 ##- Get an account from local ethereum network
 > eth.getBalance(personal.listAccounts[0])

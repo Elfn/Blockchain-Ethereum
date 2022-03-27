@@ -61,12 +61,12 @@ contract Election{
   constructor() public {
     electionManager = msg.sender;
 
-//    addCandidate("A");
-//    addCandidate("B");
-//    addCandidate("C");
-//    addCandidate("D");
-//    addCandidate("E");
-//    addCandidate("F");
+    //    addCandidate("A");
+    //    addCandidate("B");
+    //    addCandidate("C");
+    //    addCandidate("D");
+    //    addCandidate("E");
+    //    addCandidate("F");
     // candidates[0].voteCount=1;
 
   }
@@ -127,7 +127,7 @@ contract Election{
 
     while (voters[delegateTo].delegate != address(0)) {
       delegateTo = voters[delegateTo].delegate;
-
+      //Sender cannot delegate to himself
       // We found a loop in the delegation, not allowed.
       require(delegateTo != msg.sender, "Found loop in delegation.");
     }
@@ -148,7 +148,7 @@ contract Election{
       // add to her weight.
       delegate_.weight += sender.weight;
       candidates[_candidateId-1].voteCount += 1;
-      delegate_.voted = true;
+      //      delegate_.voted = true;
 
     }
   }
@@ -159,24 +159,39 @@ contract Election{
 
   //   return _winner;
   // }
-
+  function copyBytes(bytes memory _bytes) private pure returns (bytes memory)
+  {
+    bytes memory copy = new bytes(_bytes.length);
+    uint256 max = _bytes.length + 31;
+    for (uint256 i=32; i<=max; i+=32)
+    {
+      assembly { mstore(add(copy, i), mload(add(_bytes, i))) }
+    }
+    return copy;
+  }
 
   //Give winner name
-  function winner() public view returns (string)
+  function winner()  public view returns (uint,string)
   {
 
     // //Check if today date is equal to the deadline date
     // require( (isEnded == false), "The election is not ended");
-    uint bestScrore = 0;
+    uint bestScrore = candidates[0].voteCount;
+    string memory message;
 
     for (uint p = 0; p < candidates.length; p++) {
       if(candidates[p].voteCount > bestScrore) {
         bestScrore = candidates[p].voteCount;
         _winner = getOneCandidate(p+1);
+        message = "There is a winner";
+      }
+      else if(candidates[p].voteCount == bestScrore){
+        _winner = getOneCandidate(p+1);
+        message = "Equality";
       }
     }
     //require(bytes(winningCandidate().name).length > 0 , "The election is not ended");
-    return _winner.name;
+    return (_winner.id,message);
   }
 
 

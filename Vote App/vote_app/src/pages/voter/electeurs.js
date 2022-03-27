@@ -65,15 +65,16 @@ const Electeurs = (props) => {
     onElectionEnded();
     setAlertShow(true);
 
-  }, [reducerValue]);
+  }, [reducerValue,isEnd]);
 
 
 
 
 
   const onElectionEnded = () => {
-    setIsEnded(isEnd);
+    setIsEnded(localStorage.getItem('isEnd'));
     console.log('COUCOU => ', isEnd);
+    //forceUpdate();
   };
 
 
@@ -112,8 +113,8 @@ const Electeurs = (props) => {
       setLoading(false);
       forceUpdate();
     }catch (err) {
-      setErrorMessage((err.message.toLowerCase().includes('Already voted'.toLowerCase())) ? 'L\'adresse de l\'électeur a été utilisée pour le vote': (err.message.toLowerCase().includes('Insufficiant funds'.toLowerCase())) ? 'Vous n\'avez pas assez de fonds' : '');
-      // console.log(err.message);
+      setErrorMessage((err.message.toLowerCase().includes('Already voted'.toLowerCase()) || 'Transaction has been reverted by the EVM'.toLowerCase()) ? 'L\'adresse de l\'électeur a été utilisée pour le vote': (err.message.toLowerCase().includes('Insufficiant funds'.toLowerCase())) ? 'Vous n\'avez pas assez de fonds' : '');
+      console.log(err.message);
       setIsVoted(false);
       setLoading(false);
     }
@@ -164,6 +165,7 @@ const Electeurs = (props) => {
     setErrorMessageDeleguation('');
     setLoading(false)
     setDelegateLoading(false)
+    setDelegate(false);
   }
 
   const renderCandidates = () => {

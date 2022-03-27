@@ -20,12 +20,16 @@ function Responsable(props) {
   const [value, setValue] = useState('');
   const [candidateName, setCandidateName] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showResultModal, setShowResultModal] = useState(false);
   const [showListModal, setShowListModal] = useState(false);
   const [showDatePickerModal, setShowDatePickerModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isAdded, setIsAdded] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [winnerName, setWinnerName] = useState('');
+  const [winnerVoteCount, setWinnerVoteCount] = useState(0);
+  const [winnerLoading, setWinnerLoading] = useState(false);
+  const [winnerMessage, setWinnerMessage] = useState(false);
 
   //userReducer to immediatly refresh component after an update's value
   const [reducerValue, forceUpdate] = useReducer(x => x + 1, 0);
@@ -102,7 +106,7 @@ function Responsable(props) {
           subtitle: '',
           text: 'Determiner la fin d l\'élection',
           buttons: [
-            <Button onClick={() => setShowDatePickerModal(true)} type="submit" variant="outline-primary">Plannifier</Button>,
+            <Stack direction="horizontal" gap={3}><div className="bg-light border"><Button onClick={() => setShowDatePickerModal(true)} type="submit" variant="outline-primary">Plannifier</Button></div><div className="">{(localStorage.getItem('isEnd') === 'true') && <h5><Badge className="text-white" bg="secondary">Terminée</Badge></h5>}</div></Stack>,
             <h5>Date de fin: <span className="badge bg-secondary mt-3">{getDateFormat(new Date(localStorage.getItem('value')))}</span></h5>
           ]
           // style: {overflowWrap: 'break-word', marginLeft: 12, width: 18}
@@ -153,13 +157,21 @@ function Responsable(props) {
      localStorage.setItem('isEnd', isEndOfElection);
      console.log('IN RESPONSIBLE ',isEndOfElection);
      props.onGetElectionStatus(isEndOfElection);
-     if(localStorage.getItem('isEnd') == 'true'){
-       election.methods.winner().call().then((name) => {
-            setWinnerName(name);
-            localStorage.setItem('winner',name);
-         console.log(name);
-       });
-     }
+     // if(localStorage.getItem('isEnd') == 'true'){
+     //   election.methods.winner().call().then((name) => {
+     //        setWinnerName(name);
+     //        localStorage.setItem('winner',name);
+     //     console.log(name);
+     //   });
+     // }
+  }
+
+  const onCheckDate = () => {
+    const  isEndOfElection = (endDate === today);
+    // console.log(new Date(e.target.value).toLocaleDateString("fr-FR"));
+    setIsEnd(isEndOfElection);
+    localStorage.setItem('isEnd', isEndOfElection);
+    forceUpdate();
   }
 
   const onAddCandidate = async (event) => {
@@ -196,6 +208,33 @@ function Responsable(props) {
 
   }
 
+  const onShowResultModal = () => {
+    setShowResultModal(true);
+  };
+
+  const onGetWinner = () => {
+    //Prevent the "Submit" function to be executed unintentionally
+    //event.preventDefault();
+    setWinnerLoading(true);
+    setWinnerMessage('');
+    console.log('OKOKOK');
+    try {
+       election.methods.winner()
+        .send({
+          from: accounts[0]
+        }).then((res) => {
+         console.log(res);
+       })
+      setWinnerLoading(false);
+       onShowResultModal();
+      forceUpdate();
+    }catch (err) {
+      setWinnerMessage((err.message.toLowerCase().includes('Already voted'.toLowerCase())) ? 'L\'adresse de l\'électeur a été utilisée pour le vote': (err.message.toLowerCase().includes('Insufficiant funds'.toLowerCase())) ? 'Vous n\'avez pas assez de fonds' : '');
+      // console.log(err.message);
+      setWinnerLoading(false);
+    }
+    // forceUpdate();
+  }
 
 
   const handleClose = () => {
@@ -203,6 +242,7 @@ function Responsable(props) {
     setShowListModal(false);
     setShowDatePickerModal(false);
     setIsAdded(false);
+    setShowResultModal(false);
 
   };
 
@@ -218,12 +258,6 @@ function Responsable(props) {
             <Stack direction="horizontal" gap={3}>
               <h5><Badge bg="warning">Responsable</Badge></h5>
               <h5><Badge className="text-black" style={{fontWeight: '12px'}} bg="light"><b>{accounts[0]}</b></Badge></h5>
-              {(localStorage.getItem('isEnd') == 'true') && <Button variant="primary" style={{fontWeight: '12px'}}>
-                <Stack direction="horizontal" gap={3}>
-                  <div>Vainqueur</div>
-                  <div><Badge bg="secondary">{localStorage.getItem('winner')}</Badge></div>
-                </Stack>
-              </Button>}
             </Stack>
           </Col>
           <Col />
@@ -346,6 +380,43 @@ function Responsable(props) {
                       shrink: true
                     }}
                   />
+                </Col>
+              </Row>
+            </Container>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+              Fermer
+            </Button>
+          </Modal.Footer>
+        </Modal>
+        {/*Modal Resultat*/}
+        <Modal
+          size="md"
+          show={showResultModal}
+          onHide={handleClose}
+          aria-labelledby="example-modal-sizes-title-lg"
+        >
+          <Modal.Header closeButton>
+            <Modal.Title id="example-modal-sizes-title-lg">
+              Resultat de l'élection
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Container>
+              <Row>
+                <Col className="text-center">
+                  <Card className="text-center">
+                    <Card.Header><b style={{fontSize: 'large',fontWeight: 'bold'}}>Vainqueur</b></Card.Header>
+                    <Card.Img height={380}  variant="top" src="https://bootdey.com/img/Content/avatar/avatar1.png" />
+                    <Card.Body>
+                      <Card.Title>Nom</Card.Title>
+                      <Card.Text>
+                        Gagne avec un total de """" votes
+                      </Card.Text>
+                    </Card.Body>
+                    {/*<Card.Footer className="text-muted">2 days ago</Card.Footer>*/}
+                  </Card>
                 </Col>
               </Row>
             </Container>
